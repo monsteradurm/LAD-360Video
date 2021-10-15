@@ -27,6 +27,6 @@ app.get('/',function(req,res) {
     res.sendFile(path.join(__dirname, '/index.html'));
   });
 
-var server = app.listen(0, () => {
+var server = app.listen(3000, () => {
         console.log("LAD-360video --> listening ", server.address().port)
 });
