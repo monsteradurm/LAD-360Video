@@ -20,27 +20,13 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, '/views')));
-/*
-app.use('/images', express.static(path.join(__dirname, '/images')));
-app.use('/scripts', express.static(path.join(__dirname, '/scripts')));
-app.use("/hdri2cube", express.static(path.join(__dirname, '/HDRI-To-Cubemap/index.html')))
-app.set('view engine', 'ejs');
-*/
+
+app.use('/assets', express.static(path.join(__dirname, '/assets')));
 
 app.get('/',function(req,res) {
     res.sendFile(path.join(__dirname, '/index.html'));
   });
 
-/*
-app.get('/TNBC',function(req,res) {
-    res.sendFile(path.join(__dirname, '/nmbc.html'));
-  });
-
-app.get('/TNBC-SNOW',function(req,res) {
-  res.sendFile(path.join(__dirname, '/nmbc-snow.html'));
-});
-*/
-
-app.listen(port, () => {
-        console.log("LAD-360video --> listening at: " + port)
+var server = app.listen(0, () => {
+        console.log("LAD-360video --> listening ", server.address().port)
 });

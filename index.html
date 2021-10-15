@@ -1,25 +1,246 @@
 <!DOCTYPE html> 
 <html> 
     <head> 
-        <script type="text/javascript" src="https://s7d9.scene7.com/s7viewers/html5/js/Video360Viewer.js"></script> 
-            <style type="text/css"> 
-            #s7viewer.s7video360viewer { 
-            width: 640px; 
-            height: 480px; 
-            } 
-        </style> 
+        <!-- Include Clappr -->
+        <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/uevent@2/browser.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        
+        <script src="assets/lib/detector.js"></script>
+        <script src="assets/js/three.min.js"></script>
+        <script src="assets/valiant.jquery.js"></script>
+        <link rel="stylesheet" type="text/css" href="assets/css/valiant360.css">
+        <style>
+            #viewer {
+            height: auto;
+            width: calc(100vw - 500px);
+            margin:auto;
+            border: solid black 2px;
+            }
+            .fullscreenButton {
+                display:none !important;
+            }
+            /*
+            .valiant-progress-bar {
+                display:none !important;
+            }
+            .timeLabel {
+                display:none !important;
+            }
+            */
+            .navbar-brand {
+                font-size:30px;
+                font-weight:bold;
+                font-family: Delius;
+            }
+            .la-logo {
+                width:250px;
+                height: auto;
+                position:absolute;
+                right: 10px;
+                bottom: 10px;
+                z-index:1000;
+            }
+
+            #the-file-input {
+                font-style: italic;
+                font-weight: normal;
+                opacity: 1;
+            }
+
+            .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+                color: #eee;
+                background-color: transparent !important;
+                border: none !important;
+            }
+
+            .nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+                border: none !important;
+            }
+            .nav-tabs .nav-link {
+                border: none !important;
+            }
+
+            a {
+                color: #aaa;
+            }
+
+            a:hover {
+                color: white;
+                text-decoration: none;
+            }
+            .nav-tabs {
+                border-bottom: none !important;
+            }
+
+            h4 {
+                color:#343a40;
+            }
+
+            .form-control:focus {
+                border: solid gray 1px !important;
+                outline: none !important;
+                box-shadow:none !important;
+            }
+
+            .flex-grow {
+                flex: 1 0 auto;
+            }
+        </style>
     </head> 
     <body> 
-        <div id="s7viewer" style="position:relative;width:640px;height:360px;"></div> 
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="padding-top:0px; padding-left: 30px; height:10px; background:transparent;">
+    
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+            </div>
+
+        </nav>
+
+        <div class="tab-content" style="margin-top:40px">
+            
+            <div class="tab-pane active" id="view" role="tabpanel" aria-labelledby="view-tab">
+                <div class="container">
+                    <div class="row">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" 
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="min-width:300px !important">
+                                Iphone 12 Pro Max (landscape)
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="resDropdown">
+                                <a class="dropdown-item">Iphone 12 Pro Max (landscape)</a>
+                                <a class="dropdown-item">Iphone 12 Pro Max (portrait)</a>
+                                <a class="dropdown-item">Ipad Pro (landscape)</a>
+                                <a class="dropdown-item">Ipad Pro (portrait)</a>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="input-group" style="width:100%;margin-left:auto">
+                                <input type="text" class="form-control"  id="file-text"     
+                                    placeholder="Choose an equirectangular image." style="outline:none !important">
+
+                                <button class="btn btn-secondary" type="button" id="browse-button">Browse</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="file" id="file-input" 
+                    style="visibility:hidden !important">
+                </div>
+            </div>
+        </div>
+
+        <div id="viewer" style="position:relative;width:640px;height:360px;" data-video-src="assets/test.mp4"></div> 
+        <div style="height:10px; bottom:0px; width:100vw; position:absolute;background:#343a40"></div>
+
         <script type="text/javascript"> 
-            var video360Viewer = new s7viewers.Video360Viewer({ 
-            "containerId":"s7viewer", 
-            "params":{ 
-            "asset":"Viewers/space_station_360-AVS", 
-            "serverurl":"https://s7d9.scene7.com/is/image/", 
-            "videoserverurl":"https://s7d9.scene7.com/is/content/" 
-            } 
-            }).init(); 
+
+            var resolutions = {
+                "Iphone 12 Pro Max (portrait)": { width: 1284, height: 2778 },
+                "Iphone 12 Pro Max (landscape)": { width: 2778, height: 1284 },
+                "Ipad Pro (landscape)": { width: 2732, height: 2048 },
+                "Ipad Pro (portrait)": { width: 2048, height: 2732 }, 
+            }
+
+            $('#browse-button').click(function(){
+                $('#file-input').click();
+            });
+
+            $('#viewer').Valiant360({
+                fov: 35,
+            });
+
+            var fileInput = document.getElementById("file-input");
+
+            $('.dropdown-menu a').click(function () {  
+                var selection = $(this).text();
+
+                $('#dropdownMenuButton').text(selection);
+                resizeViewer(resolutions[selection]);
+                
+            });
+
+            $(window).resize(function () {
+                var selection = $('#dropdownMenuButton').text().trim();
+                var res = resolutions[selection];
+                if (res)
+                    resizeViewer(resolutions[$('#dropdownMenuButton').text().trim()])
+            })
+
+            $(document).ready(function () {
+                var selection = $('#dropdownMenuButton').text().trim();
+                var res = resolutions[selection];
+                if (res)
+                    resizeViewer(resolutions[$('#dropdownMenuButton').text().trim()])
+            });
+
+            var OPTIONS = {
+                    fov: 35,
+                    clickAndDrag: true,
+                    //lat: 45,
+                    //lon: 90,
+                    hideControls: false,
+                    keyboardControls: false
+                }
+            function resizeViewer(res) {
+                if (!res) return;
+
+                $('.valiantContainer').Valiant360('destroy');
+                $('#viewer').empty();
+
+                var selection = $(this).text();
+                var winx =  $(window).width();
+                var winy = $(window).height();
+
+                var aspect = res.width / res.height;
+
+                var height = winy - 170;
+                var width = height * aspect;
+
+                $('#viewer').css("width", width);
+                $('#viewer').css("height", height);
+                $('#viewer').Valiant360(OPTIONS);
+            }
+
+            var STATE = 'PLAY';
+            document.body.onkeyup = function(e){
+                if(e.keyCode == 32){
+                    if (STATE == 'PLAY') {
+                        STATE = 'PAUSED';
+                        $('#viewer').Valiant360('pause');
+                    } else {
+                        STATE = 'PLAY';
+                        $('#viewer').Valiant360('play');
+                    }
+                }
+            }
+
+            $('#file-input').on('change', function () {
+
+                var file = fileInput.files.item(0);
+                var fn = file.name;
+                
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    the_url = event.target.result;
+                    viewer.setVideo(the_url);
+                }
+                reader.readAsDataURL(file);
+                $('#file-text').val(fn)
+                $('#viewer').data('video-src', fn); //setter
+
+                resizeViewer(resolutions[$('#dropdownMenuButton').text().trim()])
+                //                $('#viewer').Valiant360('loadVideo', fn);
+            });
+
+            resizeViewer(resolutions[$('#dropdownMenuButton').text()])
+
+            
         </script> 
     </body> 
 </html>
