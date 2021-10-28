@@ -9,10 +9,10 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
         
-        <script src="assets/lib/detector.js"></script>
-        <script src="assets/js/three.min.js"></script>
-        <script src="assets/valiant.jquery.js"></script>
-        <link rel="stylesheet" type="text/css" href="assets/css/valiant360.css">
+        <script src="LAD-360Video/assets/lib/detector.js"></script>
+        <script src="LAD-360Video/assets/js/three.min.js"></script>
+        <script src="LAD-360Video/assets/valiant.jquery.js"></script>
+        <link rel="stylesheet" type="text/css" href="LAD-360Video/assets/css/valiant360.css">
         <style>
             #viewer {
             height: auto;
@@ -135,7 +135,7 @@
             </div>
         </div>
 
-        <div id="viewer" style="position:relative;width:640px;height:360px;" data-video-src="assets/test.mp4"></div> 
+        <div id="viewer" style="position:relative;width:640px;height:360px;" data-video-src="/LAD-360Video/assets/default.mp4"></div> 
         <div style="height:10px; bottom:0px; width:100vw; position:absolute;background:#343a40"></div>
 
         <script type="text/javascript"> 
@@ -226,13 +226,17 @@
                 var fn = file.name;
                 
                 var reader = new FileReader();
+                reader.readAsDataURL(file);
+                
+                
                 reader.onload = function (event) {
                     the_url = event.target.result;
-                    viewer.setVideo(the_url);
+                    $('#viewer').attr('data-video-src', the_url);
+                    resizeViewer(resolutions[$('#dropdownMenuButton').text().trim()])
+                    //$('#viewer').Valiant360('loadVideo', the_url);
                 }
-                reader.readAsDataURL(file);
                 $('#file-text').val(fn)
-                $('#viewer').data('video-src', fn); //setter
+                //$('#viewer').data('video-src', fn); //setter
 
                 resizeViewer(resolutions[$('#dropdownMenuButton').text().trim()])
                 //                $('#viewer').Valiant360('loadVideo', fn);

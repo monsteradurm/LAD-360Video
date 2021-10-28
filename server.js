@@ -21,12 +21,12 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, '/views')));
 
-app.use('/assets', express.static(path.join(__dirname, '/assets')));
+app.use('/LAD-360Video/assets', express.static(path.join(__dirname, '/assets')));
 
-app.get('/',function(req,res) {
+app.get('/LAD-360Video',function(req,res) {
     res.sendFile(path.join(__dirname, '/index.html'));
   });
 
-var server = app.listen(3000, () => {
+var server = app.listen(() => {
         console.log("LAD-360video --> listening ", server.address().port)
 });
